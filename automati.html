@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+
+<head>
+</head>
+
+<body>
+
+    <h2>update-pcv.sh</h2>
+    
+    <p>This script is responsible for updating the (bernese-specific) Phase Center 
+    Variation .PCV files. It lives in <code>/cron</code> folder and should run on a daily basis.</p>
+
+    <p>It will download three antex files and transform them to PCV files:
+    <ul>
+        <li><a href="ftp://epncb.oma.be/epncb/station/general/epn_08.atx">epn_08.atx</a> to <code>~/tables/pcv/PCV_EPN.PCV</code> </li>
+        <li><a href="ftp://epncb.oma.be/epncb/station/general/epnc_08.atx">epnc_08.atx</a> to <code>~/tables/pcv/PCV_EPC.PCV</code> and</li>
+        <li><a href="ftp://igs.org/pub/station/general/igs08.atx">epn_08.atx</a> to <code>~/tables/pcv/PCV_IGS.PCV</code></li>
+    </ul>
+    </p>
+
+    <p>All output is directed to a logfile named <code>~/cron/update-pcv.log</code>. Inspect this file for any errors.</p>
+
+    <p>The update-pcv.sh script calls the <code>~/autobpe/bin/atx2pcv.sh</code> program to perform the conversion. It also needs the
+    campaign named <em>"EPNDENS1"</em>. If anything goes wrong, check the log file (and then maybe the output file(s)
+    <code>~/data/GPSDATA/CAMPAIGN52/ENSDENS1/BPE/ATX2PCV.*</code> and <code>~/data/GPSDATA/CAMPAIGN52/ENSDENS1/BPE/APYYSSS0_*.LOG</code>).</p>
+
+    <h2>update-sta.sh</h2>
+
+    <p>This script is responsible for updating the Station Information records for all sites maintained/processed by EUREF.
+    It lives in <code>/cron</code> folder and should run on a daily basis.</p>
+
+    <p>It will download the (station information) file <a href="ftp://epncb.oma.be/epncb/station/general/EUREF52.STA">EUREF.STA</a>
+    and merge the records therein with the ones in the file <code>~/tables/sta/NTUA52.STA</code>. This will create a new, merged
+    (station information) file named <code>~/tables/sta/EPN.STA</code>.
+
+    <p>The script calls the program <code>~/autobpe/bin/stamrg.sh</code> and it needs the campaign named <em>"EPNDENS1"</em>. All output
+    is dumped to the log file <code>~/cron/update-sta.log</code>.</p>
+
+</body>
