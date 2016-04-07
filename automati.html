@@ -3,11 +3,29 @@
 <meta charset="utf-8">
 
 <head>
+<style>
+.error-box {
+    border: 1px solid red ;
+    background-color: lightgrey;
+    font-family: Courier New,Courier;
+    line-height: 26.4px;
+}
+</style>
 </head>
 
 <body>
 
-    <h2>update-pcv.sh</h2>
+    <h1>Important Files</h1>
+    
+    <h2><a name="ntua52.sta">NTUA52.STA</a></h2>
+    
+    <p>This file (<code>~/tables/sta/NTUA52.STA</code>) contains the station information for all non-EPN, 
+    non-URANUS stations that are processed by NTUA (including but not limited to networks Greece, Santorini, etc).
+    <em>It should always be up-todate</em>, the script <a href="#update-sta"><code>update-sta.sh</code></a> should take care of this.</p>
+
+    <h1>Cron Jobs</h1>
+
+    <h2><code>update-pcv.sh</code></h2>
     
     <p>This script is responsible for updating the (bernese-specific) Phase Center 
     Variation .PCV files. It lives in <code>/cron</code> folder and should run on a daily basis.</p>
@@ -26,23 +44,42 @@
     campaign named <em>EPNDENS1</em>. If anything goes wrong, check the log file (and then maybe the output file(s)
     <code>~/data/GPSDATA/CAMPAIGN52/ENSDENS1/BPE/ATX2PCV.*</code> and <code>~/data/GPSDATA/CAMPAIGN52/ENSDENS1/BPE/APYYSSS0_*.LOG</code>).</p>
 
-    <h2>update-sta.sh</h2>
+    <h2><a name="update-sta"><code>update-sta.sh</code></a></h2>
 
     <p>This script is responsible for updating the Station Information records for all sites maintained/processed by EUREF.
     It lives in <code>/cron</code> folder and should run on a daily basis.</p>
 
     <p>It will download the (station information) file <a href="ftp://epncb.oma.be/epncb/station/general/EUREF52.STA">EUREF.STA</a>
-    and merge the records therein with the ones in the file <code>~/tables/sta/NTUA52.STA</code>. This will create a new, merged
+    and merge the records therein with the ones in the file <a href="#ntua52.sta"><code>~/tables/sta/NTUA52.STA</code></a>. This will create a new, merged
     (station information) file named <code>~/tables/sta/EPN.STA</code>.
 
     <p>The script calls the program <code>~/autobpe/bin/stamrg.sh</code> and it needs the campaign named <em>EPNDENS1</em>. All output
     is dumped to the log file <code>~/cron/update-sta.log</code>.</p>
 
-    <h2>sync_w_bern52.sh</h2>
+    <h2><code>sync_w_bern52.sh</code></h2>
     
     <p>This script synchronizes (i.e. updates) the folder <code>~/bern52/BERN52/GPS/GEN/</code> with the remote folder at 
     <a href="ftp.unibe.ch/aiub/BSWUSER52/GEN/">AIUB</a>. It lives in <code>/cron</code> folder and should run on a daily basis.</p>
 
     <p>The script uses the program <code>~/autobpe/bin/syncwbern52.sh</code>. All output is directed to the (log) file <code>~/cron/sync_w_bern52.log</code>.
+    
+    <h1>FAQ</h1>
+    
+    <h2>Error Messages</h2>
+    
+    <div class="error-box">
+    <pre>*** SR MISSING: Following antenna(s) not found in phase
+                    center information file:
+                    TPSCR3_GGD      CONE        0
+                    Filename: ${X}/GEN/foo.I08</pre>
+    </div>
+    <p><em(watch the trailing '0' after the antenna/radome)</em></p>
+    
+    <p>This is caused by the representation of the generic antenna (represented by '0' and not '999999').
+    <code>grep</code> the PCV file for the antenna; if you see this line:<br>
+    <code>TPSCR3_GGD      CONE      0 G     2   1    0    5    5   90  IGS08_1888 ROBOT                03-APR-13</code><br>
+    instead of this:<br>
+    <code>TPSCR3_GGD      CONE 999999 G     2   1    0    5    5   90  IGS08_1888 ROBOT                03-APR-13</code><br>
+    you should probably re-compile the PCV file, using the <code>--enable-individual-calibration</code> switch (via the <code>atx2pcv.sh</code> script).
 
 </body>
