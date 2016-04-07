@@ -4,11 +4,31 @@
 
 <head>
 <style>
+h1 { 
+    color: #111;
+    font-family: 'Open Sans Condensed', sans-serif;
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 64px;
+    margin: 0 0 0;
+    padding: 20px 30px;
+    text-align: center;
+    text-transform: uppercase;
+        border-bottom:1px solid #CCC;
+    padding-bottom:3px;
+}
 .error-box {
     border: 1px solid red ;
     background-color: lightgrey;
     font-family: Courier New,Courier;
     line-height: 26.4px;
+}
+.bib-quote {
+    border: 0.7px solid green ;
+    margin: 20px 60px 20px 60px;
+    padding: 20px;
+    font-family: Courier New,Courier;
+    font-size: 75%;
 }
 </style>
 </head>
@@ -22,6 +42,17 @@
     <p>This file (<code>~/tables/sta/NTUA52.STA</code>) contains the station information for all non-EPN, 
     non-URANUS stations that are processed by NTUA (including but not limited to networks Greece, Santorini, etc).
     <em>It should always be up-todate</em>, the script <a href="#update-sta"><code>update-sta.sh</code></a> should take care of this.</p>
+    
+    <h2><a name="receiver.ntua">RECEIVER.NTUA</a></h2>
+    
+    <p>This file is a copy of the default <a href="ftp://ftp.unibe.ch/aiub/BSWUSER52/GEN/RECEIVER.">RECEIVER.</a> file, but additionaly contains all gnss receivers used in any of the sites we process (or is not included
+    in the <code>RECEIVER.</code> file but is needed).</p>
+    
+    <p>All receiver types included in <code>RECEIVER.NTUA</code> but not in <code>RECEIVER.</code> should be
+    recorded in the file: <code>~/tables/etc/receiver.</code>.</p>
+    
+    <p>Note that the file can be found at <code>~/bern52/BERN52/GPS/GEN</code>. <em>Only touch
+    this file if you know what you're doing!!</em>.
 
     <h1>Cron Jobs</h1>
 
@@ -81,5 +112,38 @@
     instead of this:<br>
     <code>TPSCR3_GGD      CONE 999999 G     2   1    0    5    5   90  IGS08_1888 ROBOT                03-APR-13</code><br>
     you should probably re-compile the PCV file, using the <code>--enable-individual-calibration</code> switch (via the <code>atx2pcv.sh</code> script).
+    
+    <p>From <a href="http://www.bernese.unibe.ch/docs/DOCU52.pdf">Bernese v5.2</a>:</p>
+    <div class="bib-quote">
+    <p>[Chapter 18.2.3]</p>
+    <p>In the phase center eccentricity file there is a now a distinction between two cases:
+    <ul>
+    <li>If individual antenna calibrations shall be considered in a campaign, individual antenna numbers
+        ranging from 1 to 999998 are used for individually calibrated antennas,
+        while the antenna number "999999" is used to indicate type–specific calibrations
+        (i.e., applied to all antennas of the same type with no individual calibration available)
+        in the phase center eccentricity file.</li>
+    <li>If only type–specific calibrations shall be considered in a campaign, all antennas are
+        stored with the antenna number "0" in the phase center eccentricity file (i.e., there
+        is only one calibration per antenna type).</li>
+    </ul>
+    Both modes require separate phase center eccentricity files, whose generation requires
+    different option settings in the program ATX2PCV (see description on option “Set number
+    of generic antennas to 999999” in Section 18.3.1).</p>
+    <p>It is also important to know that all processing programs have to find all expected entries in
+    the antenna phase center eccentricity file. As soon as an antenna is connected to a receiver
+    that supports other systems than only GPS, the corresponding corrections are requested
+    for all additional GNSS as well.</p>
+    <p>[Chapter 18.3.1]</p>
+    <p>The option "Set number of generic antennas to 999999" in panel "ATX2PCV 2: ANTEX Conversion"
+    is important, because it is the switch between consideration or non–consideration
+    of individual antenna calibrations in your processing: It must be activated if individual
+    antenna calibrations shall be considered. All group-specific calibrations then get the an-
+    tenna number "999999" in the phase center file, while the individually calibrated antennas
+    have their individual 6-digit numbers. If only group calibrations are to be considered in
+    the processing, the option must be de–activated. In this case, the phase center file will
+    only contain group calibrations with the antenna number "0".</p>
+    </p></div>
+
 
 </body>
