@@ -37,13 +37,28 @@ h1 {
 
     <h1>Important Files</h1>
     
-    <h2><a name="ntua52.sta">NTUA52.STA</a></h2>
+    <h2><a name="ntua52-sta">NTUA52.STA</a></h2>
     
     <p>This file (<code>~/tables/sta/NTUA52.STA</code>) contains the station information for all non-EPN, 
     non-URANUS stations that are processed by NTUA (including but not limited to networks Greece, Santorini, etc).
     <em>It should always be up-todate</em>, the script <a href="#update-sta"><code>update-sta.sh</code></a> should take care of this.</p>
     
-    <h2><a name="receiver.ntua">RECEIVER.NTUA</a></h2>
+    <p>Notes for <code>NTUA52.STA</code></p>
+    <ul>
+    <li>Station <code>artu</code>, which is an IGS station used in our processing, is not listed in the official 
+    <a href="ftp://epncb.oma.be/pub/station/general/EUREF52.STA">EUREF station information file</a>. Hence, we have extracted its records from
+    <a href="ftp://ftp.unibe.ch/aiub/BSWUSER52/STA/CODE.STA">CODE's station information file</a> and added them to <code>NTUA52.STA</code>. It's radome
+    though is changed from <code>DOME</code> to <code>NONE</code>, since there is no calibration for it's antenna/radome pair. The same is done from CODE, where in
+    the <a href="ftp://ftp.unibe.ch/aiub/BSWUSER52/GEN/PCV_COD.I08">Phase Center Variation file</a> it is written that the <code>DOME</code> is : <em>IGS08_1888 ADOPTED from NONE</em>.</li>
+    
+    <li>
+    Station <code>mat1</code>, which is an IGS station used in our processing, is not listed in the official 
+    <a href="ftp://epncb.oma.be/pub/station/general/EUREF52.STA">EUREF station information file</a>. Hence, we have extracted its records from
+    <a href="ftp://ftp.unibe.ch/aiub/BSWUSER52/STA/CODE.STA">CODE's station information file</a> and added them to <code>NTUA52.STA</code>.
+    </li>
+    </ul>
+    
+    <h2><a name="receiver-ntua">RECEIVER.NTUA</a></h2>
     
     <p>This file is a copy of the default <a href="ftp://ftp.unibe.ch/aiub/BSWUSER52/GEN/RECEIVER.">RECEIVER.</a> file, but additionaly contains all gnss receivers used in any of the sites we process (or is not included
     in the <code>RECEIVER.</code> file but is needed).</p>
@@ -53,6 +68,13 @@ h1 {
     
     <p>Note that the file can be found at <code>~/bern52/BERN52/GPS/GEN</code>. <em>Only touch
     this file if you know what you're doing!!</em>.
+    
+    <h2><a name="ntua-blq">NTUA.BLQ</a></h2>
+    
+    <p>This file is a concatenation of the individual BLQ files: <a href="ftp://epncb.oma.be/pub/station/general/EPN_FES2004.BLQ">EPN_FES2004.BLQ</a> and <code>GREECE.BLQ</code> and
+    contains correction terms for computing ocean loading induced displacements, according to the FES2004 model. 
+    Note that the <em>centre of mass correction is not applied</em>, i.e. the header includes
+    the line: <pre>$$ CMC:  NO   (corr.tide centre of mass)</pre></p>
 
     <h1>Cron Jobs</h1>
 
@@ -81,7 +103,7 @@ h1 {
     It lives in <code>/cron</code> folder and should run on a daily basis.</p>
 
     <p>It will download the (station information) file <a href="ftp://epncb.oma.be/epncb/station/general/EUREF52.STA">EUREF.STA</a>
-    and merge the records therein with the ones in the file <a href="#ntua52.sta"><code>~/tables/sta/NTUA52.STA</code></a>. This will create a new, merged
+    and merge the records therein with the ones in the file <a href="#ntua52-sta"><code>~/tables/sta/NTUA52.STA</code></a>. This will create a new, merged
     (station information) file named <code>~/tables/sta/EPN.STA</code>.
 
     <p>The script calls the program <code>~/autobpe/bin/stamrg.sh</code> and it needs the campaign named <em>EPNDENS1</em>. All output
